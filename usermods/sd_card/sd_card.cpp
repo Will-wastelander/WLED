@@ -16,16 +16,20 @@
 #endif
 
 #ifndef UM_SD_SELECT
-  #define UM_SD_SELECT 16;
+  #define UM_SD_SELECT 16
 #endif
 #ifndef UM_SD_CLOCK
-  #define UM_SD_CLOCK 14;
+  #define UM_SD_CLOCK 14
 #endif
 #ifndef UM_SD_POCI
-  #define UM_SD_POCI 36;
+  #if CONFIG_IDF_TARGET_ESP32S3 && (CONFIG_SPIRAM_MODE_OCT || CONFIG_ESPTOOLPY_FLASHMODE_OPI)  // on -S3 with octal (opi) flash or PSRAM, Pin 22-37 are not available
+    #define UM_SD_POCI 44
+  #else
+    #define UM_SD_POCI 36
+  #endif
 #endif
 #ifndef UM_SD_PICO
-  #define UM_SD_PICO 15;
+  #define UM_SD_PICO 15
 #endif
 
 
@@ -77,10 +81,9 @@ class UsermodSdCard : public Usermod {
 
         bool returnOfInitSD = false;
 
-        #if defined(WLED_USE_SD_SPI)
-          spiPort.begin(configPinSourceClock, configPinPoci, configPinPico, configPinSourceSelect);
-          returnOfInitSD = SD_ADAPTER.begin(configPinSourceSelect, spiPort);
-        #endif
+        // This whole function is only enabled when compiling with WLED_USE_SD_SPI
+        spiPort.begin(configPinSourceClock, configPinPoci, configPinPico, configPinSourceSelect);
+        returnOfInitSD = SD_ADAPTER.begin(configPinSourceSelect, spiPort);
 
         if(!returnOfInitSD) {
           DEBUG_PRINTF("[%s] SPI begin failed!\n", _name);
