@@ -11,6 +11,8 @@
   #define USED_STORAGE_FILESYSTEMS "SD SPI, LittleFS"
   #include "SD.h"
   #include "SPI.h"
+#else
+  #error "Please define either WLED_USE_SD_MMC or WLED_USE_SD_SPI"
 #endif
 
 #ifndef UM_SD_SELECT
@@ -27,7 +29,7 @@
 #endif
 
 
-#ifdef WLED_USE_SD_MMC
+#ifndef WLED_USE_SD_MMC
   // SD_MMC configuration handled elsewhere
 #if defined(CONFIG_IDF_TARGET_ESP32S3)
     // ESP32-S3 default hardware SPI bus is typically FSPI (or HSPI)
