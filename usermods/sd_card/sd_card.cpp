@@ -14,6 +14,10 @@
 #else
   #error "Please define either WLED_USE_SD_MMC or WLED_USE_SD_SPI"
 #endif
+#if defined(WLED_USE_SD_SPI) && defined(WLED_USE_SD_MMC)
+  #error "Both WLED_USE_SD_MMC and WLED_USE_SD_SPI are defined, please use only one."
+#endif
+
 
 #ifndef UM_SD_SELECT
   #define UM_SD_SELECT 16
