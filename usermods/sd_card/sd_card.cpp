@@ -37,11 +37,13 @@
 #endif
 
 
-#ifndef WLED_USE_SD_MMC
+#ifdef WLED_USE_SD_SPI
   // SD_MMC configuration handled elsewhere
     // HSPI bus should be used both on -S3 and classic esp32; try VSPI (classic esp32) or FSPI (esp32-s3) in case of conflicts
     SPIClass spiPort = SPIClass(HSPI); 
-  #if defined(WLED_USE_ETHERNET)
+  #if defined(WLED_USE_ETHERNET) || defined(CONFIG_IDF_TARGET_ESP32C3)
+   // Ethernet boards only have one SPI bus (HSPI) availeable
+   // ESP32-C3 only has one SPI bus
    #warning "SD card may have conflicts with 2-pin LEDs."
   #endif
 #endif
